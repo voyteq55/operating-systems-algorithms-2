@@ -3,11 +3,11 @@ package Zadanie3;
 import java.util.ArrayList;
 
 public class FIFOAlgorithm extends ReplacementAlgorithm {
-    private int elementOfPageToRemoveNext;
+    private int indexOfPageToRemoveNext;
 
     public FIFOAlgorithm(int maxPhysicalMemoryCapacity, ArrayList<Page> pagesReferences) {
         super(maxPhysicalMemoryCapacity, pagesReferences);
-        this.elementOfPageToRemoveNext = 0;
+        this.indexOfPageToRemoveNext = 0;
     }
 
     @Override
@@ -23,8 +23,8 @@ public class FIFOAlgorithm extends ReplacementAlgorithm {
             return true;
         }
 
-        physicalMemory.set(elementOfPageToRemoveNext, pagetoReference);
-        elementOfPageToRemoveNext = (elementOfPageToRemoveNext + 1) % maxPhysicalMemoryCapacity;
+        physicalMemory.set(indexOfPageToRemoveNext, pagetoReference);
+        indexOfPageToRemoveNext = (indexOfPageToRemoveNext + 1) % maxPhysicalMemoryCapacity;
         return true;
     }
 }

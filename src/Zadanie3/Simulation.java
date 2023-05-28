@@ -14,8 +14,20 @@ public class Simulation {
         System.out.println("fifo: " + pageFaultsFIFO);
 
         RandomAlgorithm randomAlgorithm = new RandomAlgorithm(PHYSICAL_MEMORY_CAPACITY, Generator.deepCopy(pagesReferences));
-        int pageFaults = randomAlgorithm.countPageFaults();
-        System.out.println("random: " + pageFaults);
+        int pageFaultsRandom = randomAlgorithm.countPageFaults();
+        System.out.println("random: " + pageFaultsRandom);
+
+        OptimalAlgorithm optimalAlgorithm = new OptimalAlgorithm(PHYSICAL_MEMORY_CAPACITY, Generator.deepCopy(pagesReferences));
+        int pageFaultsOptimal = optimalAlgorithm.countPageFaults();
+        System.out.println("optimal: " + pageFaultsOptimal);
+
+        LRUAlgorithm lruAlgorithm = new LRUAlgorithm(PHYSICAL_MEMORY_CAPACITY, Generator.deepCopy(pagesReferences));
+        int pageFaultsLRU = optimalAlgorithm.countPageFaults();
+        System.out.println("lru: " + pageFaultsLRU);
+
+        LRUAproximateAlgorithm lruAproximateAlgorithm = new LRUAproximateAlgorithm(PHYSICAL_MEMORY_CAPACITY, Generator.deepCopy(pagesReferences));
+        int pageFaultsLRUAproximate = lruAproximateAlgorithm.countPageFaults();
+        System.out.println("lru aproximate: " + pageFaultsLRUAproximate);
 
     }
 
