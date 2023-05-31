@@ -8,13 +8,11 @@ public class ProportionalAllocation {
     private Process[] finishedProcesses;
     private final int totalPhysicalMemorySize;
     private int globalPageFaults;
-    private int freeFramesToAllocate;
 
     public ProportionalAllocation(int totalPhysicalMemorySize, ArrayList<Process> processes) {
         this.totalPhysicalMemorySize = totalPhysicalMemorySize;
         this.processes = processes;
         this.globalPageFaults = 0;
-        this.freeFramesToAllocate = 0;
         this.finishedProcesses = new Process[processes.size()];
         allocateFrames();
     }

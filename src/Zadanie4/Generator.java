@@ -19,6 +19,8 @@ public class Generator {
             if (!isInLocality && random.nextDouble() < STEPPING_INTO_LOCALITY_PROBABILITY) {
                 startNumber = random.nextInt(virtualMemoryCapacity - 1);
                 endNumberExclusive = startNumber + random.nextInt(virtualMemoryCapacity - startNumber) + 1;
+//                startNumber = (int)(virtualMemoryCapacity * 0.2) + random.nextInt((int)((virtualMemoryCapacity - 1)*0.2+1));
+//                endNumberExclusive = startNumber + random.nextInt((int)(virtualMemoryCapacity * 0.2+1)) + 1;
             } else if (random.nextDouble() < STEPPING_OUT_OF_LOCALITY_PROBABILITY) {
                 startNumber = 0;
                 endNumberExclusive = virtualMemoryCapacity;

@@ -1,6 +1,7 @@
 package Zadanie4;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Process {
     private final int id;
@@ -11,6 +12,13 @@ public class Process {
     private int pageFaultsCount;
     private boolean isPaused;
     private int currentPageIndex;
+    private int framesNeededToUnpause;
+    private int timeSpentPaused;
+
+    //   TYMCZASOWWE !!!!!!!
+    public ArrayList<Page> getPagesReferences() {
+        return pagesReferences;
+    }
 
 
 
@@ -23,6 +31,8 @@ public class Process {
         this.pageFaultsCount = 0;
         this.isPaused = false;
         this.currentPageIndex = 0;
+        this.framesNeededToUnpause = 0;
+        this.timeSpentPaused = 0;
     }
 
     public void setPhysicalMemoryCapacity(int capacity) {
@@ -59,6 +69,7 @@ public class Process {
 
         if (physicalMemory.size() < allocatedPhysicalMemoryCapacity) {
             physicalMemory.add(pagetoReference);
+            pagetoReference.markPageFault();
             return true;
         }
 
@@ -82,7 +93,31 @@ public class Process {
         }
 
         physicalMemory.set(leastRecentlyUsedPageFrameIndex, pagetoReference);
+        pagetoReference.markPageFault();
         return true;
+    }
+
+    public int numberOfRecentPageFaults(int deltaT) {
+        int currentIndex = currentPageIndex;
+        int numberOfPageFaults = 0;
+        while (currentIndex >= 0 && currentIndex > currentPageIndex - deltaT) {
+            if (currentIndex < pagesReferences.size() && pagesReferences.get(currentIndex).wasPageFault()) {
+                numberOfPageFaults++;
+            }
+            currentIndex--;
+        }
+        return numberOfPageFaults;
+    }
+
+    public void freeUpOneFrame() {
+        if (physicalMemory.size() == allocatedPhysicalMemoryCapacity) {
+            physicalMemory.remove(allocatedPhysicalMemoryCapacity - 1);
+        }
+        allocatedPhysicalMemoryCapacity--;
+    }
+
+    public void allocateOneMoreFrame() {
+        allocatedPhysicalMemoryCapacity++;
     }
 
     public Process deepCopy() {
@@ -97,12 +132,40 @@ public class Process {
         return id;
     }
 
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    public void pause() {
+        physicalMemory = new ArrayList<>();
+        framesNeededToUnpause = allocatedPhysicalMemoryCapacity + 1;
+        allocatedPhysicalMemoryCapacity = 0;
+        isPaused = true;
+    }
+
+    public void unpause() {
+        allocatedPhysicalMemoryCapacity = framesNeededToUnpause;
+        isPaused = false;
+    }
+
+    public boolean canBeUnpaused(int freeFramesToAllocate) {
+        return freeFramesToAllocate >= framesNeededToUnpause;
+    }
+
     public int getPageSetCount() {
         return pageSetCount;
     }
 
     public int getPageFaultsCount() {
         return pageFaultsCount;
+    }
+
+    public int getCurrentPageIndex() {
+        return currentPageIndex;
+    }
+
+    public int getFramesNeededToUnpause() {
+        return framesNeededToUnpause;
     }
 }
 
