@@ -1,7 +1,6 @@
 package Zadanie4;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public class WorkingSetAllocation {
@@ -67,7 +66,6 @@ public class WorkingSetAllocation {
                 if (currentProcess.isPageFaultNextPage()) {
                     globalPageFaults++;
                 }
-                // zeby index nie byl poza size of pagesReferences
                 if (currentProcess.isFinished()) {
                     freeFramesToAllocate += currentProcess.getAllocatedPhysicalMemoryCapacity();
                     finishedProcesses[currentProcess.getIndex()] = processes.remove(randomProcessIndex);
@@ -78,7 +76,6 @@ public class WorkingSetAllocation {
                 }
 
                 if (currentTime % WORKING_SET_CHECK_FREQUENCY == 0) {
-//                    showTest();
                     int sumOfWorkingSetSizes = 0;
                     pausedProcesses.clear();
                     for (Process process : processes) {
@@ -105,7 +102,6 @@ public class WorkingSetAllocation {
                         sumOfWorkingSetSizes -= largestWorkingSetSizeProcess.getWorkingSetSize();
 
                     }
-
                     freeFramesToAllocate = totalPhysicalMemorySize;
                     for (Process process : processes) {
                         if (!process.isPaused()) {
@@ -114,10 +110,6 @@ public class WorkingSetAllocation {
                         }
                     }
                     allocateFramesProportionally();
-
-//                    System.out.print("  working sety: "); for (Process process : processes) System.out.print(process.getWorkingSetSize() + ", ");
-//                    System.out.print("   w procesie " + currentProcess.getIndex() + " w czasie " + currentTime + " obecny rozmiar working set " + DELTA_T + ": " + currentProcess.getWorkingSetSize());
-//                    System.out.print(" zapauzowane: " + Arrays.toString(pausedProcesses.toArray()));
                 }
 
                 currentTime++;
@@ -128,44 +120,19 @@ public class WorkingSetAllocation {
         }
     }
 
-//    private void tryAllocatingFramesToPausedProcesses() {
-//        for (Process process : pausedProcesses) {
-//            if (process.canBeUnpaused(freeFramesToAllocate)) {
-//                freeFramesToAllocate -= process.getFramesNeededToUnpause();
-//                pausedProcesses.remove(process);
-//                process.unpause();
-//                return;
-//            }
-//        }
-//    }
-
     public void showResults() {
-        System.out.print("\nModel strefowy\nliczby bledow: ");
+        System.out.println("\nModel strefowy (deltaT jednego procesu = " + DELTA_T + ")");
+        System.out.println("Laczna liczba bledow strony: " + globalPageFaults);
+        System.out.print("Liczba bledow strony poszczegolnych procesow: ");
         for (Process process : finishedProcesses) {
             System.out.print(process.getPageFaultsCount() + ", ");
         }
 
-//        System.out.print("\nramki przydzielone na koncu: ");
-//        for (Process process : finishedProcesses) {
-//            System.out.print(process.getAllocatedPhysicalMemoryCapacity() + ", ");
-//        }
-
-        System.out.println("lacznie bledow: " + globalPageFaults);
-
-        System.out.print("czas wstrzymania procesow: ");
+        System.out.print("\nCzas wstrzymania procesow (szamotanie): ");
         for (Process process : finishedProcesses) {
             System.out.print(process.getTimeSpentPaused() + ", ");
         }
         System.out.println();
     }
-
-    private void showTest() {
-        System.out.print("\nramki przydzielone test ");
-        for (Process process : processes) {
-            System.out.print(process.getAllocatedPhysicalMemoryCapacity() + ", ");
-        }
-        System.out.print("   wolne ramki: " + freeFramesToAllocate);
-    }
-
 
 }

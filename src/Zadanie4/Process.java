@@ -15,13 +15,6 @@ public class Process {
     private int framesNeededToUnpause;
     private int workingSetSize;
 
-    //   TYMCZASOWWE !!!!!!!
-    public ArrayList<Page> getPagesReferences() {
-        return pagesReferences;
-    }
-
-
-
     public Process(int id, int pageSetCount, ArrayList<Page> pagesReferences) {
         this.id = id;
         this.pageSetCount = pageSetCount;

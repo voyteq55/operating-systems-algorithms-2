@@ -45,16 +45,18 @@ public class EqualAllocation {
     }
 
     public void showResults() {
-        System.out.print("\nRowno\nliczby bledow: ");
+        System.out.println("\nRowny przydzial");
+        System.out.println("Laczna liczba bledow strony: " + globalPageFaults);
+        System.out.print("Liczba bledow strony poszczegolnych procesow: ");
         for (Process process : finishedProcesses) {
             System.out.print(process.getPageFaultsCount() + ", ");
         }
 
-        System.out.print("\nramki przydzielone: ");
+        System.out.print("\nRamki przydzielone procesom: ");
         for (Process process : finishedProcesses) {
             System.out.print(process.getAllocatedPhysicalMemoryCapacity() + ", ");
         }
+        System.out.println();
 
-        System.out.println("lacznie bledow: " + globalPageFaults);
     }
 }

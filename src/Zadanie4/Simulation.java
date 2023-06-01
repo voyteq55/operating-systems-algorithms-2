@@ -16,19 +16,13 @@ public class Simulation {
             processes.add(new Process(i, processVirtualMemoryCapacity, Generator.generatePageReferences(REFERENCE_COUNT, processVirtualMemoryCapacity)));
         }
 
-        for (Process process : processes) {
-            for (Page page : process.getPagesReferences()) {
-                System.out.print(page.getReference());
-                System.out.print(" ");
-            }
-            System.out.println();
-        }
+        System.out.println("Statystyki dla " + NUMBER_OF_PROCESSES + " procesow, kazdy z nich wykonuje " + REFERENCE_COUNT + " odwolan do stron (lacznie " + NUMBER_OF_PROCESSES * REFERENCE_COUNT + " odwolan)");
+        System.out.println("Laczna liczba ramek: " + TOTAL_PHYSICAL_MEMORY_CAPACITY);
+        System.out.println("Liczba stron z ktorych korzystaja poszczegolne procesy: " + Arrays.toString(capacities));
 
-        System.out.println(Arrays.toString(capacities));
-
-        EqualAllocation allocation = new EqualAllocation(TOTAL_PHYSICAL_MEMORY_CAPACITY, Generator.deepCopyProcesses(processes));
-        allocation.start();
-        allocation.showResults();
+        EqualAllocation equalAllocation = new EqualAllocation(TOTAL_PHYSICAL_MEMORY_CAPACITY, Generator.deepCopyProcesses(processes));
+        equalAllocation.start();
+        equalAllocation.showResults();
 
         ProportionalAllocation proportionalAllocation = new ProportionalAllocation(TOTAL_PHYSICAL_MEMORY_CAPACITY, Generator.deepCopyProcesses(processes));
         proportionalAllocation.start();
@@ -41,10 +35,6 @@ public class Simulation {
         WorkingSetAllocation workingSetAllocation = new WorkingSetAllocation(TOTAL_PHYSICAL_MEMORY_CAPACITY, Generator.deepCopyProcesses(processes));
         workingSetAllocation.start();
         workingSetAllocation.showResults();
-
-//        allocation.showResults();
-//        proportionalAllocation.showResults();
-//        pffAllocation.showResults();
 
     }
 

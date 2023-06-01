@@ -1,7 +1,6 @@
 package Zadanie4;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public class PageFaultFrequencyBasedAllocation {
@@ -62,7 +61,6 @@ public class PageFaultFrequencyBasedAllocation {
                 if (currentProcess.isPageFaultNextPage()) {
                     globalPageFaults++;
                 }
-                // zeby index nie byl poza size of pagesReferences
                 if (currentProcess.isFinished()) {
                     freeFramesToAllocate += currentProcess.getAllocatedPhysicalMemoryCapacity();
                     finishedProcesses[currentProcess.getIndex()] = processes.remove(randomProcessIndex);
@@ -71,11 +69,7 @@ public class PageFaultFrequencyBasedAllocation {
                 }
 
                 if (currentProcess.getCurrentPageIndex() % PAGE_FAULTS_CHECK_FREQUENCY == 0) {
-//                    showTest();
                     int recentPageFaults = currentProcess.numberOfRecentPageFaults(DELTA_T);
-//                    System.out.print("   w procesie " + currentProcess.getIndex() + " w czasie " + currentProcess.getCurrentPageIndex() + " obecne bledy w ostatnich " + DELTA_T + ": " + recentPageFaults);
-//                    System.out.print(" zapauzowane: " + Arrays.toString(pausedProcesses.toArray()));
-//                    System.out.print(" pamiec wirt. procesu: " + currentProcess.getPageSetCount());
 
                     if (recentPageFaults < LOWER_LIMIT && currentProcess.getAllocatedPhysicalMemoryCapacity() > 1) {
                         currentProcess.freeUpOneFrame();
@@ -113,32 +107,18 @@ public class PageFaultFrequencyBasedAllocation {
     }
 
     public void showResults() {
-        System.out.print("\nSterowanie liczba bledow\nliczby bledow: ");
+        System.out.println("\nSterowanie czestoscia bledow strony (deltaT = " + DELTA_T + ", limit dolny = " + UPPER_LIMIT + ", limit dolny = " + LOWER_LIMIT + ")");
+        System.out.println("Laczna liczba bledow strony: " + globalPageFaults);
+        System.out.print("Liczba bledow strony poszczegolnych procesow: ");
         for (Process process : finishedProcesses) {
             System.out.print(process.getPageFaultsCount() + ", ");
         }
 
-//        System.out.print("\nramki przydzielone na koncu: ");
-//        for (Process process : finishedProcesses) {
-//            System.out.print(process.getAllocatedPhysicalMemoryCapacity() + ", ");
-//        }
-
-        System.out.println("lacznie bledow: " + globalPageFaults);
-
-        System.out.print("czas wstrzymania procesow: ");
+        System.out.print("\nCzas wstrzymania procesow (szamotanie): ");
         for (Process process : finishedProcesses) {
             System.out.print(process.getTimeSpentPaused() + ", ");
         }
         System.out.println();
     }
-
-    private void showTest() {
-        System.out.print("\nramki przydzielone test ");
-        for (Process process : processes) {
-            System.out.print(process.getAllocatedPhysicalMemoryCapacity() + ", ");
-        }
-        System.out.print("   wolne ramki: " + freeFramesToAllocate);
-    }
-
 
 }
