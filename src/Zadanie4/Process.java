@@ -14,6 +14,7 @@ public class Process {
     private int currentPageIndex;
     private int framesNeededToUnpause;
     private int workingSetSize;
+    private int thrashingOccurences;
 
     public Process(int id, int pageSetCount, ArrayList<Page> pagesReferences) {
         this.id = id;
@@ -187,6 +188,14 @@ public class Process {
 
     public int getWorkingSetSize() {
         return workingSetSize;
+    }
+
+    public void addThrashingOccurence() {
+        thrashingOccurences++;
+    }
+
+    public int getThrashingOccurences() {
+        return thrashingOccurences;
     }
 }
 

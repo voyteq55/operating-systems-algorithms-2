@@ -8,6 +8,8 @@ public class ProportionalAllocation {
     private Process[] finishedProcesses;
     private final int totalPhysicalMemorySize;
     private int globalPageFaults;
+    private static final int THRASHING_CHECK_FREQUENCY = 20;
+    private static final int THRASHING_TRESHOLD = 12;
 
     public ProportionalAllocation(int totalPhysicalMemorySize, ArrayList<Process> processes) {
         this.totalPhysicalMemorySize = totalPhysicalMemorySize;
@@ -45,8 +47,13 @@ public class ProportionalAllocation {
 
             if (currentProcess.isFinished()) {
                 finishedProcesses[currentProcess.getIndex()] = processes.remove(randomProcessIndex);
-            } else if (currentProcess.isPageFaultNextPage()) {
-                globalPageFaults++;
+            } else {
+                if (currentProcess.isPageFaultNextPage()) {
+                    globalPageFaults++;
+                }
+                if (currentProcess.getCurrentPageIndex() % THRASHING_CHECK_FREQUENCY == 0 && currentProcess.numberOfRecentPageFaults(THRASHING_CHECK_FREQUENCY) > THRASHING_TRESHOLD) {
+                    currentProcess.addThrashingOccurence();
+                }
             }
         }
     }
@@ -62,6 +69,10 @@ public class ProportionalAllocation {
         System.out.print("\nRamki przydzielone procesom: ");
         for (Process process : finishedProcesses) {
             System.out.print(process.getAllocatedPhysicalMemoryCapacity() + ", ");
+        }
+        System.out.print("\nWystapienia szamotania procesow: ");
+        for (Process process : finishedProcesses) {
+            System.out.print(process.getThrashingOccurences() + ", ");
         }
         System.out.println();
     }
