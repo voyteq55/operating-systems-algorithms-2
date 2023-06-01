@@ -14,8 +14,8 @@ public class PageFaultFrequencyBasedAllocation {
 
     private static final int DELTA_T = 20;
     private static final int PAGE_FAULTS_CHECK_FREQUENCY = 5;
-    private static final int UPPER_LIMIT = 10;
-    private static final int LOWER_LIMIT = 5;
+    private static final int UPPER_LIMIT = 8;
+    private static final int LOWER_LIMIT = 2;
 
     public PageFaultFrequencyBasedAllocation(int totalPhysicalMemorySize, ArrayList<Process> processes) {
         this.totalPhysicalMemorySize = totalPhysicalMemorySize;
@@ -95,6 +95,8 @@ public class PageFaultFrequencyBasedAllocation {
                         }
                     }
                 }
+            } else {
+                currentProcess.increaseTimeSpentPaused();
             }
         }
     }
@@ -111,17 +113,23 @@ public class PageFaultFrequencyBasedAllocation {
     }
 
     public void showResults() {
-        System.out.print("Sterowanie liczba bledow\nliczby bledow: ");
+        System.out.print("\nSterowanie liczba bledow\nliczby bledow: ");
         for (Process process : finishedProcesses) {
             System.out.print(process.getPageFaultsCount() + ", ");
         }
 
-        System.out.print("\nramki przydzielone na koncu: ");
-        for (Process process : finishedProcesses) {
-            System.out.print(process.getAllocatedPhysicalMemoryCapacity() + ", ");
-        }
+//        System.out.print("\nramki przydzielone na koncu: ");
+//        for (Process process : finishedProcesses) {
+//            System.out.print(process.getAllocatedPhysicalMemoryCapacity() + ", ");
+//        }
 
         System.out.println("lacznie bledow: " + globalPageFaults);
+
+        System.out.print("czas wstrzymania procesow: ");
+        for (Process process : finishedProcesses) {
+            System.out.print(process.getTimeSpentPaused() + ", ");
+        }
+        System.out.println();
     }
 
     private void showTest() {

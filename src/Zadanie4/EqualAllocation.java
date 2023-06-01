@@ -45,7 +45,7 @@ public class EqualAllocation {
     }
 
     public void showResults() {
-        System.out.print("Rowno\nliczby bledow: ");
+        System.out.print("\nRowno\nliczby bledow: ");
         for (Process process : finishedProcesses) {
             System.out.print(process.getPageFaultsCount() + ", ");
         }

@@ -52,7 +52,7 @@ public class ProportionalAllocation {
     }
 
     public void showResults() {
-        System.out.print("Proporcjonalnie\nliczby bledow: ");
+        System.out.print("\nProporcjonalnie\nliczby bledow: ");
         for (Process process : finishedProcesses) {
             System.out.print(process.getPageFaultsCount() + ", ");
         }

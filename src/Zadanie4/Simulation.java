@@ -38,6 +38,14 @@ public class Simulation {
         pffAllocation.start();
         pffAllocation.showResults();
 
+        WorkingSetAllocation workingSetAllocation = new WorkingSetAllocation(TOTAL_PHYSICAL_MEMORY_CAPACITY, Generator.deepCopyProcesses(processes));
+        workingSetAllocation.start();
+        workingSetAllocation.showResults();
+
+//        allocation.showResults();
+//        proportionalAllocation.showResults();
+//        pffAllocation.showResults();
+
     }
 
 }

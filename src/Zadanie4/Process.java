@@ -1,7 +1,6 @@
 package Zadanie4;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class Process {
     private final int id;
@@ -11,9 +10,10 @@ public class Process {
     private ArrayList<Page> pagesReferences;
     private int pageFaultsCount;
     private boolean isPaused;
+    private int timeSpentPaused;
     private int currentPageIndex;
     private int framesNeededToUnpause;
-    private int timeSpentPaused;
+    private int workingSetSize;
 
     //   TYMCZASOWWE !!!!!!!
     public ArrayList<Page> getPagesReferences() {
@@ -33,6 +33,7 @@ public class Process {
         this.currentPageIndex = 0;
         this.framesNeededToUnpause = 0;
         this.timeSpentPaused = 0;
+        this.workingSetSize = 0;
     }
 
     public void setPhysicalMemoryCapacity(int capacity) {
@@ -42,15 +43,6 @@ public class Process {
     public int getAllocatedPhysicalMemoryCapacity() {
         return allocatedPhysicalMemoryCapacity;
     }
-
-//    public int countPageFaults() {
-//        for (Page page : pagesReferences) {
-//            if (isPageFaultWhenReferencingPage(page)) {
-//                pageFaultsCount++;
-//            }
-//        }
-//        return pageFaultsCount;
-//    }
 
     public boolean isPageFaultNextPage() {
         boolean isPageFault = isPageFaultWhenReferencingPage(pagesReferences.get(currentPageIndex++));
@@ -109,6 +101,26 @@ public class Process {
         return numberOfPageFaults;
     }
 
+    public int numberOfUniqueRecentReferences(int deltaT) {
+        HashSet<Integer> uniqueReferences = new HashSet<>();
+        int currentIndex = currentPageIndex;
+        while (currentIndex >= 0 && currentIndex > currentPageIndex - deltaT) {
+            uniqueReferences.add(pagesReferences.get(currentIndex).getReference());
+            currentIndex--;
+        }
+        return uniqueReferences.size();
+    }
+
+    public void modifyAllocationBasedOnWorkingSetSize() {
+        if (allocatedPhysicalMemoryCapacity < workingSetSize) {
+            allocatedPhysicalMemoryCapacity = workingSetSize;
+        } else {
+           while (allocatedPhysicalMemoryCapacity > workingSetSize) {
+               freeUpOneFrame();
+           }
+        }
+    }
+
     public void freeUpOneFrame() {
         if (physicalMemory.size() == allocatedPhysicalMemoryCapacity) {
             physicalMemory.remove(allocatedPhysicalMemoryCapacity - 1);
@@ -148,6 +160,14 @@ public class Process {
         isPaused = false;
     }
 
+    public void increaseTimeSpentPaused() {
+        timeSpentPaused++;
+    }
+
+    public int getTimeSpentPaused() {
+        return timeSpentPaused;
+    }
+
     public boolean canBeUnpaused(int freeFramesToAllocate) {
         return freeFramesToAllocate >= framesNeededToUnpause;
     }
@@ -166,6 +186,14 @@ public class Process {
 
     public int getFramesNeededToUnpause() {
         return framesNeededToUnpause;
+    }
+
+    public void setWorkingSetSize(int workingSetSize) {
+        this.workingSetSize = workingSetSize;
+    }
+
+    public int getWorkingSetSize() {
+        return workingSetSize;
     }
 }
 
