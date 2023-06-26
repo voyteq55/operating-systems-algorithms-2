@@ -1,12 +1,12 @@
 package Zadanie5;
 
 public class Process {
-    private int id;
-    private double load;
-    private int arrivalTime;
-    private int initialExecutionTime;
+    private final int id;
+    private final double load;
+    private final int arrivalTime;
+    private final int initialExecutionTime;
     private int executionTimeLeft;
-    private CPU initialProcessor;
+    private final CPU initialProcessor;
     private CPU currentProcessor;
 
     public Process(int id, double load, int arrivalTime, int initialExecutionTime, CPU initialProcessor) {
@@ -37,6 +37,10 @@ public class Process {
 
     public CPU getInitialProcessor() {
         return initialProcessor;
+    }
+
+    public Process copy() {
+        return new Process(id, load, arrivalTime, initialExecutionTime, initialProcessor);
     }
 
 }

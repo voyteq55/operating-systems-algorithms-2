@@ -20,4 +20,12 @@ public class Generator {
 
         return processes;
     }
+
+    public static ArrayList<Process> deepCopy(ArrayList<Process> processes) {
+        ArrayList<Process> copiedProcesses = new ArrayList<>();
+        for (Process process : processes) {
+            copiedProcesses.add(process.copy());
+        }
+        return copiedProcesses;
+    }
 }

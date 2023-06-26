@@ -1,8 +1,6 @@
 package Zadanie5;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 
 public class CPU {
     private final int id;
@@ -21,6 +19,11 @@ public class CPU {
 
     public boolean isRelaxed() {
         return this.load < Simulation.RELAX_CONSTANT_R;
+    }
+
+    public void reset() {
+        this.activeProcesses.clear();
+        this.load = 0.0;
     }
 
     public void assignToActiveProcesses(Process process) {
@@ -48,6 +51,27 @@ public class CPU {
         otherCPUs.remove(this);
         Collections.shuffle(otherCPUs);
         return otherCPUs;
+    }
+
+    public void captureProcessesFrom(CPU otherCPU, ResultCollector resultCollector) {
+        ArrayList<Process> leastOverloadingProcesses = new ArrayList<>(otherCPU.activeProcesses);
+        leastOverloadingProcesses.sort((process1, process2) -> (int)(process1.getLoad() - process2.getLoad()));
+        Iterator<Process> iterator = leastOverloadingProcesses.iterator();
+
+        ArrayList<Process> processesToRemove = new ArrayList<>();
+        resultCollector.addCaptureRequest();
+        while (this.isRelaxed() && otherCPU.isOverloaded() && iterator.hasNext()) {
+            resultCollector.addCapture();
+            resultCollector.addCaptureRequest();
+            Process processToCapture = iterator.next();
+            this.assignToActiveProcesses(processToCapture);
+            otherCPU.load -= processToCapture.getLoad();
+            processesToRemove.add(processToCapture);
+        }
+        for (Process processToRemove : processesToRemove) {
+            otherCPU.activeProcesses.remove(processToRemove);
+        }
+
     }
 
     public double getLoad() {
