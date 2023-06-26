@@ -17,8 +17,16 @@ public class Simulation {
 
         ArrayList<Process> processes = Generator.generateProcesses(allCPUs);
 
+        System.out.println("Symulacja dla " + NUMBER_OF_CPUS + " procesorów oraz " + NUMBER_OF_PROCESSES + " procesów");
+        System.out.println("Parametry symulacji: p = " + OVERLOAD_CONSTANT_P + ", r = " + RELAX_CONSTANT_R + ", z = " + RANDOM_PROCESSOR_REQUEST_NUMBER_Z);
+
+        System.out.println("\nStrategia 1:");
         simulate(new FirstStrategy(), Generator.deepCopy(processes), allCPUs);
+
+        System.out.println("Strategia 2:");
         simulate(new SecondStrategy(), Generator.deepCopy(processes), allCPUs);
+
+        System.out.println("Strategia 3:");
         simulate(new ThirdStrategy(), Generator.deepCopy(processes), allCPUs);
 
     }

@@ -7,7 +7,6 @@ public class Process {
     private final int initialExecutionTime;
     private int executionTimeLeft;
     private final CPU initialProcessor;
-    private CPU currentProcessor;
 
     public Process(int id, double load, int arrivalTime, int initialExecutionTime, CPU initialProcessor) {
         this.id = id;
@@ -16,7 +15,6 @@ public class Process {
         this.initialExecutionTime = initialExecutionTime;
         this.executionTimeLeft = initialExecutionTime;
         this.initialProcessor = initialProcessor;
-        this.currentProcessor = initialProcessor;
     }
 
     public void execute() {

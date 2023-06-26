@@ -45,13 +45,15 @@ public class ResultCollector {
     }
 
     public void printResults() {
-        System.out.println();
         double totalAverage = 0.0;
         double totalStdDeviation = 0.0;
+        ArrayList<Double> averages = new ArrayList<>();
+        ArrayList<Double> stdDeviations = new ArrayList<>();
+
         for (ArrayList<Double> cpuStats : loads) {
             double average = cpuStats.stream().mapToDouble(d -> d).average().orElse(0.0);
             totalAverage += average;
-            System.out.print("srednia: " + average);
+            averages.add(average);
             double stdDeviation = 0.0;
             for (double load : cpuStats) {
                 stdDeviation += Math.pow(load - average, 2.0);
@@ -59,25 +61,32 @@ public class ResultCollector {
             stdDeviation = stdDeviation / cpuStats.size();
             stdDeviation = Math.sqrt(stdDeviation);
             totalStdDeviation += Math.pow(stdDeviation, 2.0);
-            System.out.print(", odch. st.: " + stdDeviation);
-            System.out.println();
+            stdDeviations.add(stdDeviation);
         }
 
         totalAverage = totalAverage / allCPUs.size();
         totalStdDeviation = Math.sqrt(totalStdDeviation / allCPUs.size());
 
-        System.out.println("w sumie srednia: " + totalAverage);
-        System.out.println("w sumie std deviation: " + totalStdDeviation);
+        System.out.printf("%-60s%.15f", "\nŚrednie obciążenie całego systemu: ", totalAverage);
+        System.out.printf("%-60s%.15f", "\nOdchylenie standardowe obciążenia całego systemu: ", totalStdDeviation);
 
-        System.out.println("migrations: " + migrationsCount);
-        System.out.println("migration requests: " + migrationRequestsCount);
+        System.out.printf("%-60s", "\nŚrednie obciążenie dla każdego procesora:");
+        for (double avg : averages) {
+            System.out.printf("%10.5f", avg);
+        }
+        System.out.printf("%-60s", "\nOdchylenie standardowe obciążenia dla każdego procesora:");
+        for (double stdD : stdDeviations) {
+            System.out.printf("%10.5f", stdD);
+        }
+
+        System.out.println("\nMigracje procesów: " + migrationsCount);
+        System.out.println("Zapytania o obciążenie: " + migrationRequestsCount);
 
         if (capturesCount != 0 && captureRequestsCount != 0) {
-            System.out.println("captures: " + capturesCount);
-            System.out.println("capture requests: " + captureRequestsCount);
+            System.out.println("Przejęcia procesów: " + capturesCount);
+            System.out.println("Zapytania o obciążenie (przejęcia): " + captureRequestsCount);
         }
+        System.out.println();
     }
-
-
 
 }
